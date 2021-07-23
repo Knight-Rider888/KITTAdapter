@@ -683,6 +683,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         return mContext;
     }
 
+    // 对外提供获取RecyclerView的方法
+    public final RecyclerView getAttachRecyclerView() {
+        return mRecyclerView;
+    }
+
     // 对外提供获取布局填充器的方法
     public final LayoutInflater getInflater() {
         return mInflater;
