@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="kitt_list_loading">加载中…</string>
+    <string name="kitt_list_loading2">加载中</string>
+    <string name="kitt_list_loading_end">END</string>
+    <string name="kitt_list_loading_error">点击加载更多</string>
+    <string name="kitt_list_loading_error2">查看更多</string>
+
+</resources>

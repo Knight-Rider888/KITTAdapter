@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/kitt_list_footer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!--加载中-->
+
+    <RelativeLayout
+        android:id="@+id/kitt_list_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/kitt_list_lv_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="kitt_state_loading.json"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/kitt_list_lv_loading"
+            android:text="@string/kitt_list_loading"
+            android:textColor="#666666"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
+
+    <!--加载到底-->
+
+    <LinearLayout
+        android:id="@+id/kitt_list_end_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.3dp"
+            android:layout_weight="1"
+            android:alpha="0.5"
+            android:background="#cbcbcb" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/kitt_list_loading_end"
+            android:textColor="#666666"
+            android:textSize="15dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.3dp"
+            android:layout_weight="1"
+            android:background="#cbcbcb" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!--加载出错-->
+
+    <RelativeLayout
+        android:id="@+id/kitt_list_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/kitt_list_lv_error"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="-1.5dp"
+            android:layout_marginRight="14dp"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="kitt_state_error.json"
+            app:lottie_loop="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/kitt_list_lv_error"
+            android:text="@string/kitt_list_loading_error"
+            android:textColor="#666666"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
+
+
+    <!--无数据-->
+
+    <RelativeLayout
+        android:id="@+id/kitt_list_no_data_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/kitt_list_no_data_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/kitt_list_none_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kitt_list_none"
+                android:visibility="gone" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/kitt_list_none_lv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="kitt_state_no_data.json"
+                app:lottie_loop="false" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/kitt_list_none_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/kitt_list_no_data_temp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#666666"
+            android:textSize="15dp"
+            tools:text="暂无数据" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>

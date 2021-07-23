@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/kitt_list_footer_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <!--加载中-->
+
+    <RelativeLayout
+        android:id="@+id/kitt_list_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="visible">
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/kitt_list_lv_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="kitt_state_loading.json"
+            app:lottie_loop="true" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/kitt_list_lv_loading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-10dp"
+            android:ems="1"
+            android:maxEms="1"
+            android:text="@string/kitt_list_loading2"
+            android:textColor="#666666"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+    <!--加载到底-->
+
+    <LinearLayout
+        android:id="@+id/kitt_list_end_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0.3dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:alpha="0.5"
+            android:background="#cbcbcb" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/kitt_list_loading_end"
+            android:textColor="#666666"
+            android:textSize="14dp" />
+
+        <View
+            android:layout_width="0.3dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#cbcbcb" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!--加载出错-->
+
+    <RelativeLayout
+        android:id="@+id/kitt_list_error_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/kitt_list_lv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/kitt_list_lv_error"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="-3dp"
+                android:layout_marginBottom="2dp"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="kitt_state_error.json"
+                app:lottie_loop="false" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/kitt_list_lv_layout"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:ems="1"
+            android:maxEms="1"
+            android:text="@string/kitt_list_loading_error2"
+            android:textColor="#666666"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+
+    <!--无数据-->
+
+    <RelativeLayout
+        android:id="@+id/kitt_list_no_data_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/kitt_list_no_data_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/kitt_list_none_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/kitt_list_none"
+                android:visibility="gone" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/kitt_list_none_lv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="kitt_state_no_data.json"
+                app:lottie_loop="false" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/kitt_list_none_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/kitt_list_no_data_temp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#666666"
+            android:textSize="15dp"
+            tools:text="暂无数据" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>
