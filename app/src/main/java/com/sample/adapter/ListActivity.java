@@ -50,7 +50,7 @@ public class ListActivity extends AppCompatActivity {
             }
 
 
-            if (adapter.getDataSize() > 50) {
+            if (adapter.getAttachDataSize() > 50) {
                 // 显示加载到底
                 adapter.setLoadState(LoadState.LOAD_END);
                 return;
