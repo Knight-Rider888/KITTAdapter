@@ -7,14 +7,10 @@ package knight.rider.kitt.adapter.attr;
 public enum DividerStyle {
 
     // 网格，无外边框网格,纵向，横向
-    GRID(0), GRID_NO_OUTER(1), VERTICAL(2), HORIZONTAL(3);
-    private final int mStyle;
+    GRID("GridLayoutManager-'田'样式"), GRID_NO_OUTER("GridLayoutManager-'十'样式"), VERTICAL("LinearLayoutManager-方向垂直"), HORIZONTAL("LinearLayoutManager-方向水平");
 
-    DividerStyle(int style) {
-        this.mStyle = style;
+    DividerStyle(String describe) {
+
     }
 
-    public final int getStyle() {
-        return mStyle;
-    }
 }
