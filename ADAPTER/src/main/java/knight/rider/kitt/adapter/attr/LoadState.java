@@ -5,17 +5,11 @@ package knight.rider.kitt.adapter.attr;
  * 加载状态
  */
 public enum LoadState {
+    
+    LOAD_COMPLETE("加载完成"), LOADING("加载中"), LOAD_END("加载到底"), LOAD_ERROR("加载出错了"), LOAD_NO_DATA("无数据");
 
-    // 加载完成、加载中、加载到底、加载出错了、无数据
-    LOAD_COMPLETE(0), LOADING(1), LOAD_END(2), LOAD_ERROR(3), LOAD_NO_DATA(4);
+    LoadState(String state) {
 
-    private final int mState;
-
-    LoadState(int state) {
-        this.mState = state;
     }
 
-    public final int getState() {
-        return mState;
-    }
 }
