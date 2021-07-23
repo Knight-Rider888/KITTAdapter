@@ -31,7 +31,6 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    //获得常用控件
     public final ImageView getImageView(int id) {
         return getView(id);
     }

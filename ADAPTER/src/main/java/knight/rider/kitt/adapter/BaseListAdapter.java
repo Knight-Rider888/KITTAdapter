@@ -79,8 +79,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     private final int LOAD_ERROR = 3;
     // 加载无数据
     private final int LOAD_NO_DATA = 4;
-    // 去掉脚布局
-    private final int LOAD_NO_FOOTER = 5;
 
 
     // 头布局
@@ -242,7 +240,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     errorView.pauseAnimation();
                     break;
                 case LOAD_COMPLETE: // 加载完成
-                case LOAD_NO_FOOTER:// 无脚布局
                     layout.setLayoutParams(noParams);
                     loadingView.pauseAnimation();
                     emptyView.pauseAnimation();

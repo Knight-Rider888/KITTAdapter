@@ -21,19 +21,19 @@ import androidx.annotation.LayoutRes;
 
 public class ExpandableViewHolder {
 
-    private final View view;
+    private final View mItemView;
     private final SparseArray<View> mViews;
 
     // 初始化
     public ExpandableViewHolder(Context context, @LayoutRes int layout_id) {
         mViews = new SparseArray<>();
-        view = LayoutInflater.from(context).inflate(layout_id, null);
-        view.setTag(this);
+        mItemView = LayoutInflater.from(context).inflate(layout_id, null);
+        mItemView.setTag(this);
     }
 
     // 获取视图
-    public final View getConvertView() {
-        return view;
+    public final View getItemView() {
+        return mItemView;
     }
 
 
@@ -43,13 +43,13 @@ public class ExpandableViewHolder {
     public final <T extends View> T getView(int resId) {
         View mView = mViews.get(resId);
         if (mView == null) {
-            mView = view.findViewById(resId);
+            mView = mItemView.findViewById(resId);
             mViews.put(resId, mView);
         }
         return (T) mView;
     }
 
-    //获得常用控件
+
     public final ImageView getImageView(int id) {
         return getView(id);
     }
