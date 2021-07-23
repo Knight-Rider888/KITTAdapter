@@ -18,25 +18,33 @@ public abstract class SimpleListAdapter<T> extends BaseListAdapter<T> {
     // item的布局资源
     private final int mLayoutResId;
 
-    // 初始化无需数据源
+    /**
+     * 初始化无需数据源
+     */
     public SimpleListAdapter(Context context, int layoutResId, boolean supportFooter) {
         super(context, supportFooter);
         mLayoutResId = layoutResId;
     }
 
-    // 初始化无需数据源,支持脚布局
+    /**
+     * 初始化无需数据源,默认支持脚布局
+     */
     public SimpleListAdapter(Context context, int layoutResId) {
         super(context, true);
         mLayoutResId = layoutResId;
     }
 
-    // 初始化需数据源
+    /**
+     * 初始化需数据源
+     */
     public SimpleListAdapter(Context context, int layoutResId, boolean supportFooter, List<T> list) {
         this(context, layoutResId, supportFooter);
         addData(list);
     }
 
-    // 初始化需数据源，支持脚布局
+    /**
+     * 初始化需数据源，默认支持脚布局
+     */
     public SimpleListAdapter(Context context, int layoutResId, List<T> list) {
         this(context, layoutResId, true);
         addData(list);

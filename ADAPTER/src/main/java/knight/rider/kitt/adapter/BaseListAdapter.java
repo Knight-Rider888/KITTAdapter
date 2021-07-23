@@ -67,18 +67,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     private final boolean mSupportLoadStateFooter;
 
     // 当前加载状态，默认为加载完成
-    private int loadState = 0;
-
-    // 加载完成
-    private final int LOAD_COMPLETE = 0;
-    // 正在加载
-    private final int LOADING = 1;
-    // 加载到底
-    private final int LOAD_END = 2;
-    // 加载出错
-    private final int LOAD_ERROR = 3;
-    // 加载无数据
-    private final int LOAD_NO_DATA = 4;
+    private LoadState loadState = LoadState.LOAD_COMPLETE;
 
 
     // 头布局
@@ -114,11 +103,21 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     // 加载出错可否继续执行加载更多
     private boolean errorEnableLoadMore = false;
 
-    // 默认支持加载状态脚布局
+    /**
+     * 构造方法，默认支持加载状态的样式
+     *
+     * @param context The context to use.  Usually your {@link android.app.Activity} object.
+     */
     public BaseListAdapter(Context context) {
         this(context, true);
     }
 
+    /**
+     * 构造方法，默认支持加载状态的样式
+     *
+     * @param context          The context to use.  Usually your {@link android.app.Activity} object.
+     * @param supportLoadState Is support load state style ？
+     */
     public BaseListAdapter(Context context, boolean supportLoadState) {
         mData = new ArrayList<>();
         this.mContext = context;
@@ -129,13 +128,13 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         noParams = new LinearLayout.LayoutParams(0, 0);
     }
 
-    // ******** 获取item的数量 不允许修改 ********
+    // ******** 获取item的数量 ********
     @Override
     public final int getItemCount() {
         return getHeaderLayoutCount() + mData.size() + getFooterLayoutCount() + getLoadStateViewCount();
     }
 
-    // ******** 获取item的type类型 不允许修改 ********
+    // ******** 获取item的type类型 ********
     @Override
     public final int getItemViewType(int position) {
 
@@ -163,7 +162,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     public abstract int getItemViewsType(int position);
 
 
-    // ******** 创建Holder 不允许修改 ********
+    // ******** 创建Holder ********
     @NonNull
     @Override
     public final RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -175,7 +174,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mErrorListener != null && loadState == LOAD_ERROR) {
+                    if (mErrorListener != null && loadState == LoadState.LOAD_ERROR) {
                         mErrorListener.onErrorClick();
                     }
                 }
@@ -215,7 +214,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     public abstract RecyclerViewHolder onCreateViewHolders(ViewGroup parent, int viewType);
 
 
-    // ******** 绑定显示数据 不允许修改 ********
+    // ******** 绑定显示数据 ********
     @Override
     public final void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
 
@@ -227,7 +226,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             LottieAnimationView errorView = footViewHolder.getView(R.id.kitt_list_lv_error);
             LottieAnimationView emptyView = footViewHolder.getView(R.id.kitt_list_none_lv);
             // 当切换状态时，滚动到底部显示脚布局
-            mRecyclerView.smoothScrollToPosition(getDataSize());
+            mRecyclerView.smoothScrollToPosition(getAttachDataSize());
             switch (loadState) {
                 case LOADING: // 正在加载
                     layout.setLayoutParams(wrapParams);
@@ -296,7 +295,10 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     // 绑定数据
     public abstract void onBindViewHolders(RecyclerViewHolder holder, T t, int position);
 
-    // 移除所有头布局
+
+    /**
+     * 移除所有头布局
+     */
     public final void removeAllHeaders() {
         if (mHeaderLayout != null && mHeaderLayout.getChildCount() > 0) {
             mHeaderLayout.removeAllViews();
@@ -304,6 +306,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    /**
+     * 移除指定头布局
+     *
+     * @param removeView the view to be removed in the header group
+     */
     public final void removeHeader(View removeView) {
         if (mHeaderLayout != null) {
             mHeaderLayout.removeView(removeView);
@@ -313,6 +320,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    /**
+     * 移除指定位置的头布局
+     *
+     * @param index the position in the header group of the view to remove
+     */
     public final void removeHeader(int index) {
         if (mHeaderLayout != null && index >= 0 && mHeaderLayout.getChildCount() > index) {
             mHeaderLayout.removeViewAt(index);
@@ -322,10 +334,21 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    /**
+     * 添加头布局，默认垂直摆放，顺序为自动排到末尾
+     *
+     * @param header the view to be added in the header group
+     */
     public final void addHeaderView(View header) {
         addHeaderView(header, -1, LinearLayout.VERTICAL);
     }
 
+    /**
+     * 添加头布局，顺序为自动排到末尾
+     *
+     * @param header      the view to be added in the header group
+     * @param orientation the orientation of the views
+     */
     public final void addHeaderView(View header, int orientation) {
         addHeaderView(header, -1, orientation);
     }
@@ -335,9 +358,9 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      * 添加头布局
      * 注意：添加同一个头部视图对象，只进行替换，并不新增
      *
-     * @param header      头布局
-     * @param index       头布局添加的具体位置
-     * @param orientation 横向 还是 纵向
+     * @param header      the view to be added in the header group
+     * @param index       the position in the header group
+     * @param orientation the orientation of the views
      */
     public final void addHeaderView(View header, final int index, int orientation) {
 
@@ -378,7 +401,9 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
 
-    // 移除所有脚布局
+    /**
+     * 移除所有脚布局
+     */
     public final void removeAllFooters() {
         if (mFooterLayout != null && mFooterLayout.getChildCount() > 0) {
             mFooterLayout.removeAllViews();
@@ -386,6 +411,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    /**
+     * 移除指定脚布局
+     *
+     * @param removeView the view to be removed in the footer group
+     */
     public final void removeFooter(View removeView) {
         if (mFooterLayout != null) {
             mFooterLayout.removeView(removeView);
@@ -395,6 +425,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    /**
+     * 移除指定位置的脚布局
+     *
+     * @param index the position in the footer group of the view to remove
+     */
     public final void removeFooter(int index) {
         if (mFooterLayout != null && index >= 0 && mFooterLayout.getChildCount() > index) {
             mFooterLayout.removeViewAt(index);
@@ -404,11 +439,21 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-
+    /**
+     * 添加脚布局，默认垂直摆放，顺序为自动排到末尾
+     *
+     * @param footer the view to be added in the header group
+     */
     public final void addFooterView(View footer) {
         addFooterView(footer, -1, LinearLayout.VERTICAL);
     }
 
+    /**
+     * 添加脚布局，顺序为自动排到末尾
+     *
+     * @param footer      the view to be added in the header group
+     * @param orientation the orientation of the views
+     */
     public final void addFooterView(View footer, int orientation) {
         addFooterView(footer, -1, orientation);
     }
@@ -416,9 +461,9 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     /**
      * 添加脚布局
      *
-     * @param footer      脚布局
-     * @param index       脚布局添加的具体位置
-     * @param orientation 横向 还是 纵向
+     * @param footer      the view to be added in the header group
+     * @param index       the position in the header group
+     * @param orientation the orientation of the views
      */
     public final void addFooterView(View footer, int index, int orientation) {
 
@@ -530,7 +575,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     int itemCount = manager.getItemCount();
 
                     // 判断是否滑动到了最后一个item，并且是向上滑动
-                    if (lastItemPosition == (itemCount - 1) && (mIsSlidingUpward || mIsSlidingRight) && mLoadMoreListener != null && (errorEnableLoadMore || loadState != LOAD_ERROR) && loadState != LOAD_END && loadState != LOADING) {
+                    if (lastItemPosition == (itemCount - 1) && (mIsSlidingUpward || mIsSlidingRight) && mLoadMoreListener != null && (errorEnableLoadMore || loadState != LoadState.LOAD_ERROR) && loadState != LoadState.LOAD_END && loadState != LoadState.LOADING) {
                         //加载更多
                         mLoadMoreListener.onLoadMore();
                     }
@@ -638,7 +683,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         return mLongListener != null;
     }
 
-    // 添加数据源
+    /**
+     * 添加数据源
+     *
+     * @param data collection containing elements to be added to this list
+     */
     public final void addData(List<T> data) {
 
         if (data == null)
@@ -651,104 +700,155 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
 
-    // 清空数据源
+    /**
+     * 清空数据源
+     */
     @SuppressLint("NotifyDataSetChanged")
     public final void clearAll() {
         mData.clear();
         notifyDataSetChanged();
     }
 
+    /**
+     * 移除指定位置数据源
+     *
+     * @param position Position of the item that has now been removed
+     */
+    public final void remove(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position);
+    }
 
-    // 对外提供获取数据源的方法
-    // 如果要更改数据源尽量通过addData() clearAll()方法
+
+    /**
+     * 获取数据源的方法,尽量不要使用此方法操作数据
+     * 如内部提供的方法不能够满足，再使用此方式获取数据源进行操作
+     */
     public final List<T> getAttachData() {
         return mData;
     }
 
-    // 对外提供获取指定位置的数据
+
+    /**
+     * 获取指定位置的实体类
+     */
     public final T getData(int position) {
         return mData.get(position);
     }
 
-    // 对外提供获取数据的长度
-    public final int getDataSize() {
+    /**
+     * 获取数据源的长度
+     */
+    public final int getAttachDataSize() {
         return mData.size();
     }
 
-    // 对外提供获取context的方法
+    /**
+     * 获取上下文对象
+     */
     public final Context getAttachContext() {
         return mContext;
     }
 
-    // 对外提供获取RecyclerView的方法
+
+    /**
+     * 获取RecyclerView
+     */
     public final RecyclerView getAttachRecyclerView() {
         return mRecyclerView;
     }
 
-    // 对外提供获取布局填充器的方法
+
+    /**
+     * 获取布局填充墙
+     */
     public final LayoutInflater getInflater() {
         return mInflater;
     }
 
-    // 对外提供获取布是否支持状态脚布局
-    public final boolean isSupportLoadStateFooter() {
+
+    /**
+     * 获取是否支持加载状态
+     */
+    public final boolean isSupportLoadState() {
         return mSupportLoadStateFooter;
     }
 
-    // 设置Item的点击事件
+
+    /**
+     * 设置Item的点击事件
+     */
     public final void setOnItemClickListener(OnItemClickListener<T> listener) {
         this.mListener = listener;
     }
 
-    // 设置Item的点击事件
+    /**
+     * 设置Item的长按点击事件
+     */
     public final void setOnItemLongClickListener(OnItemLongClickListener<T> listener) {
         this.mLongListener = listener;
     }
 
-    // 设置加载更多事件
+    /**
+     * 设置加载更多事件
+     */
     public final void setOnLoadMoreListener(OnLoadMoreListener mLoadMoreListener) {
         this.mLoadMoreListener = mLoadMoreListener;
     }
 
-    // 设置滚动监听事件
+    /**
+     * 设置滚动监听事件
+     */
     public final void setOnScrollListener(OnScrollListener mScrollListener) {
         this.mScrollListener = mScrollListener;
     }
 
-    // 设置加载错误的监听器的方法
+    /**
+     * 设置加载错误的监听的事件
+     */
     public final void setOnFooterErrorListener(OnFooterErrorListener mErrorListener) {
         this.mErrorListener = mErrorListener;
     }
 
-    // 设置加载状态
+    /**
+     * 设置加载状态
+     */
     @SuppressLint("NotifyDataSetChanged")
     public final void setLoadState(LoadState loadState) {
         if (mSupportLoadStateFooter) {
-            this.loadState = loadState.getState();
+            this.loadState = loadState;
             notifyDataSetChanged();
         }
     }
 
-    // 设置加载出错状态可否继续执行加载更多
+    /**
+     * 设置加载出错状态可否继续执行加载更多
+     */
     public final void setLoadMoreEnableByLoadError(boolean enable) {
         this.errorEnableLoadMore = enable;
     }
 
-    // 设置空数据图片
+    /**
+     * 设置空数据状态图片
+     */
     @SuppressLint("NotifyDataSetChanged")
     public final void setEmptyImg(@DrawableRes int emptyImg) {
         this.mEmptyImg = emptyImg;
         notifyDataSetChanged();
     }
 
-    // 设置空数据是否使用动画
+    /**
+     * 设置空数据状态是否使用动画
+     */
     @SuppressLint("NotifyDataSetChanged")
     public final void setEmptyLottie(boolean useLottie) {
         this.mEmptyLottie = useLottie;
         notifyDataSetChanged();
     }
 
-    // 设置空数据文件
+    /**
+     * 设置空数据状态文字描述
+     */
     @SuppressLint("NotifyDataSetChanged")
     public final void setEmptyText(String text) {
         this.mEmptyText = TextUtils.isEmpty(text) ? "" : text;
