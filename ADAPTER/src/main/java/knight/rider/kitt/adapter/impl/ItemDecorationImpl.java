@@ -21,20 +21,24 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
 
     private final DividerStyle mDividerStyle;
 
-    private int mDividerWidth = 0;
+    private final int mDividerWidth;
     private final Paint mPaint;
 
     /**
-     * @param dividerStyle 方向类型
+     * 构造方法，分割线颜色浅灰，宽度1px
+     *
+     * @param dividerStyle the divider style.
      */
     public ItemDecorationImpl(DividerStyle dividerStyle) {
-        this(dividerStyle, Color.parseColor("#f1f1f1"), 1);
+        this(dividerStyle, Color.parseColor("#F2F2F2"), 1);
     }
 
     /**
-     * @param dividerStyle 方向类型
-     * @param color        分割线颜色
-     * @param divWidth     分割线宽度
+     * 构造方法
+     *
+     * @param dividerStyle the divider style.
+     * @param color        the divider color.
+     * @param divWidth     the divider width.
      */
     public ItemDecorationImpl(DividerStyle dividerStyle, @ColorInt int color, int divWidth) {
         this.mDividerStyle = dividerStyle;
@@ -47,22 +51,22 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
 
 
     @Override
-    public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+    public final void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         switch (mDividerStyle) {
             case HORIZONTAL:
-                //横向布局分割线
+                // 横向布局分割线
                 drawHorizontal(c, parent);
                 break;
             case VERTICAL:
-                //纵向布局分割线
+                // 纵向布局分割线
                 drawVertical(c, parent);
                 break;
             case GRID:
-                //表格格局分割线
+                // 表格格局分割线
                 drawGrid(c, parent);
                 break;
             case GRID_NO_OUTER:
-                //表格格局分割线
+                // 表格格局分割线
                 drawGridNoOuter(c, parent);
                 break;
 
@@ -71,11 +75,10 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
 
 
     @Override
-    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+    public final void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         int itemPosition = parent.getChildAdapterPosition(view);
         RecyclerView.Adapter mAdapter = parent.getAdapter();
         if (mAdapter != null) {
-            int mChildCount = mAdapter.getItemCount();
             switch (mDividerStyle) {
                 case HORIZONTAL:
                     /**
