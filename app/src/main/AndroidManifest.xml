@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KITTAdapterSample">
+        <activity
+            android:name=".ListActivity3"
+            android:exported="true" />
         <activity android:name=".ListHeaderAndFooterActivity" />
         <activity android:name=".MoreActivity" />
         <activity android:name=".ListActivity2" />

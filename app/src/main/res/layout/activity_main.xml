@@ -24,4 +24,10 @@
         android:onClick="headerAndFooter"
         android:text="头、脚布局" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="grid"
+        android:text="grid布局" />
+
 </LinearLayout>

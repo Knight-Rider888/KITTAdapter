@@ -28,4 +28,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ListHeaderAndFooterActivity.class);
         startActivity(intent);
     }
+
+    public void grid(View view) {
+        Intent intent = new Intent(this, ListActivity3.class);
+        startActivity(intent);
+    }
 }
