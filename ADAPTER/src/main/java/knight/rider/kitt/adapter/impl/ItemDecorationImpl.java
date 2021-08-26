@@ -58,8 +58,8 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
      * @param dividerStyle the divider style.
      * @param color        the divider color.
      * @param divWidth     the divider width.
-     * @param marginStart  当是线性管理器时：垂直方向 marginStart 为线的左间距  水平方向 marginStart 为线的顶部间距
-     * @param marginEnd    当是线性管理器时：垂直方向 marginEnd 为线的右间距  水平方向 marginEnd 为线的底部间距
+     * @param marginStart  当是线性管理器时：垂直方向 marginStart 为线的左间距  水平方向 marginStart 为线的顶部间距  暂不支持grid管理器
+     * @param marginEnd    当是线性管理器时：垂直方向 marginEnd 为线的右间距  水平方向 marginEnd 为线的底部间距 暂不支持grid管理器
      */
     public ItemDecorationImpl(DividerStyle dividerStyle, @ColorInt int color, int divWidth, int marginStart, int marginEnd) {
         this.mDividerStyle = dividerStyle;
@@ -249,7 +249,7 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
     private void drawLeft(Canvas c, View mChild, RecyclerView recyclerView) {
         RecyclerView.LayoutParams mChildLayoutParams = (RecyclerView.LayoutParams) mChild.getLayoutParams();
         int left = mChild.getLeft() - mDividerWidth - mChildLayoutParams.leftMargin;
-        int top = mChild.getTop() - mChildLayoutParams.topMargin + mMarginStart;
+        int top = mChild.getTop() - mChildLayoutParams.topMargin + (isGridLayoutManager(recyclerView) ? 0 : mMarginStart);
         int right = mChild.getLeft() - mChildLayoutParams.leftMargin;
         int bottom;
         if (isGridLayoutManager(recyclerView)) {
@@ -271,7 +271,7 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
         RecyclerView.LayoutParams mChildLayoutParams = (RecyclerView.LayoutParams) mChild.getLayoutParams();
         int left;
         int top = mChild.getTop() - mChildLayoutParams.topMargin - mDividerWidth;
-        int right = mChild.getRight() + mChildLayoutParams.rightMargin - mMarginEnd;
+        int right = mChild.getRight() + mChildLayoutParams.rightMargin - (isGridLayoutManager(recyclerView) ? 0 : mMarginEnd);
         int bottom = mChild.getTop() - mChildLayoutParams.topMargin;
         if (isGridLayoutManager(recyclerView)) {
             left = mChild.getLeft() - mChildLayoutParams.leftMargin - mDividerWidth;
@@ -293,7 +293,7 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
         int left = mChild.getRight() + mChildLayoutParams.rightMargin;
         int top;
         int right = left + mDividerWidth;
-        int bottom = mChild.getBottom() + mChildLayoutParams.bottomMargin;
+        int bottom = mChild.getBottom() + mChildLayoutParams.bottomMargin + mDividerWidth;
         if (isGridLayoutManager(recyclerView)) {
             top = mChild.getTop() - mChildLayoutParams.topMargin - mDividerWidth;
         } else {
@@ -311,7 +311,7 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
      */
     private void drawBottom(Canvas c, View mChild, RecyclerView recyclerView) {
         RecyclerView.LayoutParams mChildLayoutParams = (RecyclerView.LayoutParams) mChild.getLayoutParams();
-        int left = mChild.getLeft() - mChildLayoutParams.leftMargin;
+        int left = mChild.getLeft() - mChildLayoutParams.leftMargin - (isGridLayoutManager(recyclerView) ? mDividerWidth : 0);
         int top = mChild.getBottom() + mChildLayoutParams.bottomMargin;
         int bottom = top + mDividerWidth;
         int right;

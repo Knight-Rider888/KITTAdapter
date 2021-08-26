@@ -16,8 +16,6 @@ public class ListActivity3 extends AppCompatActivity {
 
     private MyAdapter2 adapter;
 
-    private int index = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
