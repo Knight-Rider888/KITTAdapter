@@ -249,13 +249,13 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
     private void drawLeft(Canvas c, View mChild, RecyclerView recyclerView) {
         RecyclerView.LayoutParams mChildLayoutParams = (RecyclerView.LayoutParams) mChild.getLayoutParams();
         int left = mChild.getLeft() - mDividerWidth - mChildLayoutParams.leftMargin;
-        int top = mChild.getTop() - mChildLayoutParams.topMargin;
+        int top = mChild.getTop() - mChildLayoutParams.topMargin + mMarginStart;
         int right = mChild.getLeft() - mChildLayoutParams.leftMargin;
         int bottom;
         if (isGridLayoutManager(recyclerView)) {
             bottom = mChild.getBottom() + mChildLayoutParams.bottomMargin + mDividerWidth;
         } else {
-            bottom = mChild.getBottom() + mChildLayoutParams.bottomMargin;
+            bottom = mChild.getBottom() + mChildLayoutParams.bottomMargin - mMarginEnd;
         }
         c.drawRect(left, top, right, bottom, mPaint);
     }
@@ -271,12 +271,12 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
         RecyclerView.LayoutParams mChildLayoutParams = (RecyclerView.LayoutParams) mChild.getLayoutParams();
         int left;
         int top = mChild.getTop() - mChildLayoutParams.topMargin - mDividerWidth;
-        int right = mChild.getRight() + mChildLayoutParams.rightMargin;
+        int right = mChild.getRight() + mChildLayoutParams.rightMargin - mMarginEnd;
         int bottom = mChild.getTop() - mChildLayoutParams.topMargin;
         if (isGridLayoutManager(recyclerView)) {
             left = mChild.getLeft() - mChildLayoutParams.leftMargin - mDividerWidth;
         } else {
-            left = mChild.getLeft() - mChildLayoutParams.leftMargin;
+            left = mChild.getLeft() - mChildLayoutParams.leftMargin + mMarginStart;
         }
         c.drawRect(left, top, right, bottom, mPaint);
     }

@@ -2,6 +2,7 @@ package com.sample.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,7 +60,8 @@ public class ListActivity2 extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         rv.setLayoutManager(linearLayoutManager);
-        rv.addItemDecoration(new ItemDecorationImpl(DividerStyle.HORIZONTAL));
+        rv.addItemDecoration(new ItemDecorationImpl(DividerStyle.HORIZONTAL, Color.parseColor("#924569"), 20, 50, 100));
+
 
 //        final ReboundListLayout rebound = findViewById(R.id.rebound);
 //        rebound.setEnablePullUp(false);
@@ -99,6 +101,6 @@ public class ListActivity2 extends AppCompatActivity {
 
     private void addData() {
 
-        handler.sendEmptyMessageDelayed(1, 5000);
+        handler.sendEmptyMessageDelayed(1, 2000);
     }
 }
