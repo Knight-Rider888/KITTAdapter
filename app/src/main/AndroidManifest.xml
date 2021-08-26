@@ -13,9 +13,7 @@
         <activity android:name=".MoreActivity" />
         <activity android:name=".ListActivity2" />
         <activity android:name=".ListActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
