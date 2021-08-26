@@ -1,5 +1,6 @@
 package com.sample.adapter;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -26,7 +27,7 @@ public class ListHeaderAndFooterActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rv.setLayoutManager(linearLayoutManager);
 
-        rv.addItemDecoration(new ItemDecorationImpl(DividerStyle.VERTICAL));
+        rv.addItemDecoration(new ItemDecorationImpl(DividerStyle.VERTICAL, Color.parseColor("#924569"), 20, 50, 100));
 
         adapter = new HeadAndFootAdapter(this);
         rv.setAdapter(adapter);

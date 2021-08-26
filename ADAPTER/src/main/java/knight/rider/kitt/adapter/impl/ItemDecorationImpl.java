@@ -24,6 +24,9 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
     private final int mDividerWidth;
     private final Paint mPaint;
 
+    // 线的间距
+    private int mMarginStart, mMarginEnd;
+
     /**
      * 构造方法，分割线颜色浅灰，宽度1px
      *
@@ -47,6 +50,26 @@ public class ItemDecorationImpl extends RecyclerView.ItemDecoration {
         mPaint.setAntiAlias(true);
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param dividerStyle the divider style.
+     * @param color        the divider color.
+     * @param divWidth     the divider width.
+     * @param marginStart  当是线性管理器时：垂直方向 marginStart 为线的左间距  水平方向 marginStart 为线的顶部间距
+     * @param marginEnd    当是线性管理器时：垂直方向 marginEnd 为线的右间距  水平方向 marginEnd 为线的底部间距
+     */
+    public ItemDecorationImpl(DividerStyle dividerStyle, @ColorInt int color, int divWidth, int marginStart, int marginEnd) {
+        this.mDividerStyle = dividerStyle;
+        mDividerWidth = divWidth;
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(color);
+        mPaint.setStyle(Paint.Style.FILL);
+        mMarginStart = marginStart;
+        mMarginEnd = marginEnd;
     }
 
 
