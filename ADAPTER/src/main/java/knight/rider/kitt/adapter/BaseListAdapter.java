@@ -730,10 +730,10 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
 
     /**
-     * 获取指定位置的实体类
+     * 获取指定位置的实体类，请注意判空处理
      */
     public final T getData(int position) {
-        return mData.get(position);
+        return position < 0 || position + 1 > mData.size() ? null : mData.get(position);
     }
 
     /**
