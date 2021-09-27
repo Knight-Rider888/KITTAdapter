@@ -38,9 +38,8 @@ public class MyAdapter extends BaseListAdapter<String> {
     }
 
     @Override
-    public void onBindViewHolders(RecyclerViewHolder holder, String s, int position) {
-
-        if (getItemViewsType(position) == 1)
+    public void onBindViewHolders(RecyclerViewHolder holder, int viewType, String s, int position) {
+        if (viewType == 1)
             holder.getTextView(R.id.tv).setText(s);
         else
             holder.getTextView(R.id.tv2).setText(s);

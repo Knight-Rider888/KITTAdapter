@@ -45,9 +45,8 @@ public class HeadAndFootAdapter extends SimpleListAdapter<String> {
         headers = getInflater().inflate(R.layout.item_header_footer, null);
     }
 
-
     @Override
-    public void onBindViewHolders(RecyclerViewHolder holder, String s, int position) {
+    public void onBindViewHolders(RecyclerViewHolder holder, int viewType, String s, int position) {
         holder.getTextView(R.id.tv).setText(s);
     }
 
