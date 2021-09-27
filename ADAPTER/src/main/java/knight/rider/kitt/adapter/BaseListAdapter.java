@@ -287,13 +287,13 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
         } else {
             // 需要子类去实现 具体操作
-            onBindViewHolders(holder, mData.get(position - getHeaderLayoutCount()), position - getHeaderLayoutCount());
+            onBindViewHolders(holder, getItemViewsType(position), mData.get(position - getHeaderLayoutCount()), position - getHeaderLayoutCount());
         }
     }
 
 
     // 绑定数据
-    public abstract void onBindViewHolders(RecyclerViewHolder holder, T t, int position);
+    public abstract void onBindViewHolders(RecyclerViewHolder holder, int viewType, T t, int position);
 
 
     /**
