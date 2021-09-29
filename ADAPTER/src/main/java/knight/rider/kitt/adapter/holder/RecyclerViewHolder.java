@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -48,6 +49,10 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     }
 
     public final ImageButton getImageButton(int id) {
+        return getView(id);
+    }
+
+    public final RadioButton getRadioButton(int id) {
         return getView(id);
     }
 
