@@ -238,7 +238,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     break;
                 case LOAD_COMPLETE: // 加载完成
                     layout.setLayoutParams(wrapParams);
-                    footViewHolder.getRelativeLayout(R.id.kitt_list_loading_layout).setVisibility(View.GONE);
+                    footViewHolder.getRelativeLayout(R.id.kitt_list_loading_layout).setVisibility(View.INVISIBLE);
                     footViewHolder.getLinearLayout(R.id.kitt_list_end_layout).setVisibility(View.GONE);
                     footViewHolder.getRelativeLayout(R.id.kitt_list_error_layout).setVisibility(View.GONE);
                     footViewHolder.getRelativeLayout(R.id.kitt_list_no_data_layout).setVisibility(View.GONE);
