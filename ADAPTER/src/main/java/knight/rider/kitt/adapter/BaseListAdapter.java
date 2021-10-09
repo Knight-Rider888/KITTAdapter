@@ -576,8 +576,8 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
                     int itemCount = manager.getItemCount();
 
-                    // 判断是否滑动到了最后一个item，并且是向上滑动
-                    if (lastItemPosition == (itemCount - 1) && (mIsSlidingUpward || mIsSlidingRight) && mLoadMoreListener != null && (errorEnableLoadMore || loadState != LoadState.LOAD_ERROR) && loadState != LoadState.LOAD_END && loadState != LoadState.LOADING) {
+                    // 判断是否滑动到了最后一个item，并且是向上滑动(去掉脚布局)
+                    if (lastItemPosition == (itemCount - 1 - getLoadStateViewCount()) && (mIsSlidingUpward || mIsSlidingRight) && mLoadMoreListener != null && (errorEnableLoadMore || loadState != LoadState.LOAD_ERROR) && loadState != LoadState.LOAD_END && loadState != LoadState.LOADING) {
                         //加载更多
                         mLoadMoreListener.onLoadMore();
                     }
