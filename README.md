@@ -16,6 +16,6 @@ allprojects {
 Step 2. Add the dependency
 ```
 dependencies {
-    implementation 'com.github.Knight-Rider888:KITTAdapter:1.0.1'
+    implementation 'com.github.Knight-Rider888:KITTAdapter:1.0.2'
 }
 ```

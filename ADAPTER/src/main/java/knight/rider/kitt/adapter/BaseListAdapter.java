@@ -237,7 +237,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     errorView.pauseAnimation();
                     break;
                 case LOAD_COMPLETE: // 加载完成
-                    layout.setLayoutParams(noParams);
+                    layout.setLayoutParams(wrapParams);
                     loadingView.pauseAnimation();
                     emptyView.pauseAnimation();
                     errorView.pauseAnimation();
@@ -816,9 +816,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         if (mSupportLoadStateFooter) {
             this.loadState = loadState;
             notifyDataSetChanged();
-            if (loadState != LoadState.LOAD_COMPLETE)
-                // 当切换状态时，滚动到底部显示脚布局
-                mRecyclerView.smoothScrollToPosition(getAttachDataSize());
         }
     }
 
