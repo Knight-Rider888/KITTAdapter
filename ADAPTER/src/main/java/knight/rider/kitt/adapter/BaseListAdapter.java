@@ -225,8 +225,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             LottieAnimationView loadingView = footViewHolder.getView(R.id.kitt_list_lv_loading);
             LottieAnimationView errorView = footViewHolder.getView(R.id.kitt_list_lv_error);
             LottieAnimationView emptyView = footViewHolder.getView(R.id.kitt_list_none_lv);
-            // 当切换状态时，滚动到底部显示脚布局
-            mRecyclerView.smoothScrollToPosition(getAttachDataSize());
             switch (loadState) {
                 case LOADING: // 正在加载
                     layout.setLayoutParams(wrapParams);
@@ -818,6 +816,9 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         if (mSupportLoadStateFooter) {
             this.loadState = loadState;
             notifyDataSetChanged();
+            if (loadState != LoadState.LOAD_COMPLETE)
+                // 当切换状态时，滚动到底部显示脚布局
+                mRecyclerView.smoothScrollToPosition(getAttachDataSize());
         }
     }
 
