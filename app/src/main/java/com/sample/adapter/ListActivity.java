@@ -93,8 +93,6 @@ public class ListActivity extends AppCompatActivity {
         });
         rv.setAdapter(adapter);
 
-        adapter.setLoadMoreEnableByLoadError(false);
-
         adapter.setOnFooterErrorListener(new OnFooterErrorListener() {
             @Override
             public void onErrorClick() {

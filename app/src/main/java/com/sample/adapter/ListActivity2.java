@@ -82,9 +82,6 @@ public class ListActivity2 extends AppCompatActivity {
         });
         rv.setAdapter(adapter);
 
-        // 出错支持加载更多的监听
-        adapter.setLoadMoreEnableByLoadError(true);
-
         adapter.setOnFooterErrorListener(new OnFooterErrorListener() {
             @Override
             public void onErrorClick() {

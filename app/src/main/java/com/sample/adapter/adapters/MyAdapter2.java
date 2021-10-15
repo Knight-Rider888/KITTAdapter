@@ -48,5 +48,5 @@ public class MyAdapter2 extends SimpleListAdapter<String> {
     public void onBindViewHolders(RecyclerViewHolder holder, int viewType, String s, int position) {
         holder.getTextView(R.id.tv).setText(s);
     }
-    
+
 }
