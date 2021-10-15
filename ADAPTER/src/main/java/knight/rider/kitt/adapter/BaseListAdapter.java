@@ -559,6 +559,12 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                             // 当前屏幕所看到的子项个数
                             int visibleItemCount = manager.getChildCount();
 
+                            if (visibleItemCount == 0) {
+                                // 还未构建
+                                mIsShowComplete = false;
+                                return;
+                            }
+
                             if (visibleItemCount < manager.getItemCount()) {
                                 // 超出一屏幕
                                 mIsShowComplete = true;
