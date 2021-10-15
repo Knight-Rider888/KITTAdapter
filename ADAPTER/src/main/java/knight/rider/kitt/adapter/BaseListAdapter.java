@@ -63,8 +63,8 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     private LinearLayout mHeaderLayout;
     private LinearLayout mFooterLayout;
 
-    // 是否支持加载状态的脚布局
-    private final boolean mSupportLoadStateFooter;
+    // 是否支持上拉加载
+    private final boolean mEnableLoadMore;
 
     // 当前加载状态，默认为加载完成
     private LoadState loadState = LoadState.LOAD_COMPLETE;
@@ -100,9 +100,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     // 脚布局状态Layout
     private int mStateFooterLayout = R.layout.kitt_list_state_footer_vertical;
 
-    // 加载出错可否继续执行加载更多
-    private boolean errorEnableLoadMore = false;
-
     /**
      * 构造方法，默认支持加载状态的样式
      *
@@ -115,13 +112,13 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     /**
      * 构造方法，默认支持加载状态的样式
      *
-     * @param context          The context to use.  Usually your {@link android.app.Activity} object.
-     * @param supportLoadState Is support load state style ？
+     * @param context        The context to use.  Usually your {@link android.app.Activity} object.
+     * @param enableLoadMore Is support load more ？
      */
-    public BaseListAdapter(Context context, boolean supportLoadState) {
+    public BaseListAdapter(Context context, boolean enableLoadMore) {
         mData = new ArrayList<>();
         this.mContext = context;
-        this.mSupportLoadStateFooter = supportLoadState;
+        this.mEnableLoadMore = enableLoadMore;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         wrapParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         matchParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -237,11 +234,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     errorView.pauseAnimation();
                     break;
                 case LOAD_COMPLETE: // 加载完成
-                    layout.setLayoutParams(wrapParams);
-                    footViewHolder.getRelativeLayout(R.id.kitt_list_loading_layout).setVisibility(View.INVISIBLE);
-                    footViewHolder.getLinearLayout(R.id.kitt_list_end_layout).setVisibility(View.GONE);
-                    footViewHolder.getRelativeLayout(R.id.kitt_list_error_layout).setVisibility(View.GONE);
-                    footViewHolder.getRelativeLayout(R.id.kitt_list_no_data_layout).setVisibility(View.GONE);
+                    layout.setLayoutParams(noParams);
                     loadingView.pauseAnimation();
                     emptyView.pauseAnimation();
                     errorView.pauseAnimation();
@@ -528,7 +521,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     // 获取加载状态的脚布局数量
     private int getLoadStateViewCount() {
-        return mSupportLoadStateFooter ? 1 : 0;
+        return mEnableLoadMore ? 1 : 0;
     }
 
 
@@ -547,6 +540,18 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
+                if (mScrollListener != null)
+                    mScrollListener.onScrollStateChanged(recyclerView, newState);
+
+                // 不支持上拉加载不监听了
+                if (!mEnableLoadMore)
+                    return;
+
+                // 加载中、加载出错、无数据以及加载到底状态不监听
+                if (loadState == LoadState.LOADING || loadState == LoadState.LOAD_END || loadState == LoadState.LOAD_ERROR || loadState == LoadState.LOAD_NO_DATA)
+                    return;
+
+
                 // 变量 最后一个可见的position
                 int lastItemPosition = -1;
                 // 布局管理器
@@ -557,30 +562,27 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
                 // 开始滚动（SCROLL_STATE_FLING），正在滚动(SCROLL_STATE_TOUCH_SCROLL), 已经停止（SCROLL_STATE_IDLE）
 
-                // 当不滑动时
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //获取最后一个完全显示的itemPosition
+                // 获取最后一个显示的itemPosition
+                if (manager instanceof GridLayoutManager) {
+                    //通过LayoutManager找到当前显示的最后的item的position
+                    lastItemPosition = ((GridLayoutManager) manager).findLastVisibleItemPosition();
+                } else if (manager instanceof LinearLayoutManager) {
+                    lastItemPosition = ((LinearLayoutManager) manager).findLastVisibleItemPosition();
+                } else if (manager instanceof StaggeredGridLayoutManager) {
+                    //因为StaggeredGridLayoutManager的特殊性可能导致最后显示的item存在多个，所以这里取到的是一个数组
+                    //得到这个数组后再取到数组中position值最大的那个就是最后显示的position值了
+                    int[] lastPositions = new int[((StaggeredGridLayoutManager) manager).getSpanCount()];
+                    ((StaggeredGridLayoutManager) manager).findLastVisibleItemPositions(lastPositions);
+                    lastItemPosition = findMax(lastPositions);
+                }
 
-                    if (manager instanceof GridLayoutManager) {
-                        //通过LayoutManager找到当前显示的最后的item的position
-                        lastItemPosition = ((GridLayoutManager) manager).findLastCompletelyVisibleItemPosition();
-                    } else if (manager instanceof LinearLayoutManager) {
-                        lastItemPosition = ((LinearLayoutManager) manager).findLastCompletelyVisibleItemPosition();
-                    } else if (manager instanceof StaggeredGridLayoutManager) {
-                        //因为StaggeredGridLayoutManager的特殊性可能导致最后显示的item存在多个，所以这里取到的是一个数组
-                        //得到这个数组后再取到数组中position值最大的那个就是最后显示的position值了
-                        int[] lastPositions = new int[((StaggeredGridLayoutManager) manager).getSpanCount()];
-                        ((StaggeredGridLayoutManager) manager).findLastCompletelyVisibleItemPositions(lastPositions);
-                        lastItemPosition = findMax(lastPositions);
-                    }
+                int itemCount = manager.getItemCount();
 
-                    int itemCount = manager.getItemCount();
-
-                    // 判断是否滑动到了最后一个item，并且是向上滑动
-                    if (lastItemPosition == (itemCount - 1) && (mIsSlidingUpward || mIsSlidingRight) && mLoadMoreListener != null && (errorEnableLoadMore || loadState != LoadState.LOAD_ERROR) && loadState != LoadState.LOAD_END && loadState != LoadState.LOADING) {
-                        //加载更多
-                        mLoadMoreListener.onLoadMore();
-                    }
+                // 判断是否滑动到了非加载状态的最后一个item，并且是向上滑动
+                if (lastItemPosition >= (itemCount - 1 - getLoadStateViewCount()) && (mIsSlidingUpward || mIsSlidingRight) && mLoadMoreListener != null && loadState != LoadState.LOAD_END && loadState != LoadState.LOADING && loadState != LoadState.LOAD_ERROR && loadState != LoadState.LOAD_NO_DATA) {
+                    setLoadState(LoadState.LOADING);
+                    //加载更多
+                    mLoadMoreListener.onLoadMore();
                 }
 
                 //防止第一行到顶部有空白区域
@@ -588,8 +590,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     ((StaggeredGridLayoutManager) manager).invalidateSpanAssignments();
                 }
 
-                if (mScrollListener != null)
-                    mScrollListener.onScrollStateChanged(recyclerView, newState);
             }
 
             private int findMax(int[] lastPositions) {
@@ -770,12 +770,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
 
     /**
-     * 获取是否支持加载状态
+     * 获取是否支持上拉加载
      */
-    public final boolean isSupportLoadState() {
-        return mSupportLoadStateFooter;
+    public boolean isEnableLoadMore() {
+        return mEnableLoadMore;
     }
-
 
     /**
      * 设置Item的点击事件
@@ -817,17 +816,10 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     @SuppressLint("NotifyDataSetChanged")
     public final void setLoadState(LoadState loadState) {
-        if (mSupportLoadStateFooter) {
+        if (mEnableLoadMore) {
             this.loadState = loadState;
             notifyDataSetChanged();
         }
-    }
-
-    /**
-     * 设置加载出错状态可否继续执行加载更多
-     */
-    public final void setLoadMoreEnableByLoadError(boolean enable) {
-        this.errorEnableLoadMore = enable;
     }
 
     /**
