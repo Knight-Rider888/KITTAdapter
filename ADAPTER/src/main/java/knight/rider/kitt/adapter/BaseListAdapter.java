@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -99,6 +100,9 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     // 脚布局状态Layout
     private int mStateFooterLayout = R.layout.kitt_list_state_footer_vertical;
+
+    // 完成状态是否显示
+    private boolean mIsShowComplete = false;
 
     /**
      * 构造方法，默认支持加载状态的样式
@@ -234,7 +238,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     errorView.pauseAnimation();
                     break;
                 case LOAD_COMPLETE: // 加载完成
-                    layout.setLayoutParams(noParams);
+                    layout.setLayoutParams(mIsShowComplete ? wrapParams : noParams);
+                    footViewHolder.getRelativeLayout(R.id.kitt_list_loading_layout).setVisibility(View.INVISIBLE);
+                    footViewHolder.getLinearLayout(R.id.kitt_list_end_layout).setVisibility(View.GONE);
+                    footViewHolder.getRelativeLayout(R.id.kitt_list_error_layout).setVisibility(View.GONE);
+                    footViewHolder.getRelativeLayout(R.id.kitt_list_no_data_layout).setVisibility(View.GONE);
                     loadingView.pauseAnimation();
                     emptyView.pauseAnimation();
                     errorView.pauseAnimation();
@@ -528,12 +536,56 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     // 表格布局 头、脚布局占一行 添加加载更多监听
     @CallSuper
     @Override
-    public final void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+    public final void onAttachedToRecyclerView(@NonNull final RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecyclerView = recyclerView;
 
         mIsSlidingUpward = false;
         mIsSlidingRight = false;
+
+        // 布局管理器
+        final RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        // 动态更新完成时的脚布局
+                        if (mEnableLoadMore && loadState == LoadState.LOAD_COMPLETE) {
+
+                            if (manager == null)
+                                return;
+
+                            // 当前屏幕所看到的子项个数
+                            int visibleItemCount = manager.getChildCount();
+
+                            // 变量 最后一个可见的position
+                            int lastItemPosition = -1;
+
+                            // 获取最后一个显示的itemPosition
+                            if (manager instanceof GridLayoutManager) {
+                                //通过LayoutManager找到当前显示的最后的item的position
+                                lastItemPosition = ((GridLayoutManager) manager).findLastVisibleItemPosition();
+                            } else if (manager instanceof LinearLayoutManager) {
+                                lastItemPosition = ((LinearLayoutManager) manager).findLastVisibleItemPosition();
+                            } else if (manager instanceof StaggeredGridLayoutManager) {
+                                //因为StaggeredGridLayoutManager的特殊性可能导致最后显示的item存在多个，所以这里取到的是一个数组
+                                //得到这个数组后再取到数组中position值最大的那个就是最后显示的position值了
+                                int[] lastPositions = new int[((StaggeredGridLayoutManager) manager).getSpanCount()];
+                                ((StaggeredGridLayoutManager) manager).findLastVisibleItemPositions(lastPositions);
+                                lastItemPosition = findMaxByStaggeredGrid(lastPositions);
+                            }
+
+                            if (visibleItemCount < manager.getItemCount()) {
+                                // 超出一屏幕
+                                mIsShowComplete = true;
+                            } else {
+                                // 未超出一屏幕
+                                mIsShowComplete = false;
+                            }
+                        }
+                    }
+                });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -554,8 +606,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
                 // 变量 最后一个可见的position
                 int lastItemPosition = -1;
-                // 布局管理器
-                RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
 
                 if (manager == null)
                     return;
@@ -573,7 +623,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     //得到这个数组后再取到数组中position值最大的那个就是最后显示的position值了
                     int[] lastPositions = new int[((StaggeredGridLayoutManager) manager).getSpanCount()];
                     ((StaggeredGridLayoutManager) manager).findLastVisibleItemPositions(lastPositions);
-                    lastItemPosition = findMax(lastPositions);
+                    lastItemPosition = findMaxByStaggeredGrid(lastPositions);
                 }
 
                 int itemCount = manager.getItemCount();
@@ -592,16 +642,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
             }
 
-            private int findMax(int[] lastPositions) {
-                int max = lastPositions[0];
-                for (int value : lastPositions) {
-                    if (value > max) {
-                        max = value;
-                    }
-                }
-                return max;
-            }
-
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -615,8 +655,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     mScrollListener.onScrolled(recyclerView, dx, dy);
             }
         });
-
-        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
 
         if (manager instanceof LinearLayoutManager) {
             if (((LinearLayoutManager) manager).getOrientation() == RecyclerView.HORIZONTAL) {
@@ -645,6 +683,17 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
             });
         }
+    }
+
+
+    private int findMaxByStaggeredGrid(int[] lastPositions) {
+        int max = lastPositions[0];
+        for (int value : lastPositions) {
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
     }
 
 
