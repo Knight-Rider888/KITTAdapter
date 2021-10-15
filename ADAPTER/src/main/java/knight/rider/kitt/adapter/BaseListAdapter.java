@@ -529,7 +529,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     // 获取加载状态的脚布局数量
     private int getLoadStateViewCount() {
-        return mEnableLoadMore ? 1 : 0;
+        return 1;
     }
 
 
@@ -551,30 +551,13 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                     @Override
                     public void onGlobalLayout() {
                         // 动态更新完成时的脚布局
-                        if (mEnableLoadMore && loadState == LoadState.LOAD_COMPLETE) {
+                        if (loadState == LoadState.LOAD_COMPLETE) {
 
                             if (manager == null)
                                 return;
 
                             // 当前屏幕所看到的子项个数
                             int visibleItemCount = manager.getChildCount();
-
-                            // 变量 最后一个可见的position
-                            int lastItemPosition = -1;
-
-                            // 获取最后一个显示的itemPosition
-                            if (manager instanceof GridLayoutManager) {
-                                //通过LayoutManager找到当前显示的最后的item的position
-                                lastItemPosition = ((GridLayoutManager) manager).findLastVisibleItemPosition();
-                            } else if (manager instanceof LinearLayoutManager) {
-                                lastItemPosition = ((LinearLayoutManager) manager).findLastVisibleItemPosition();
-                            } else if (manager instanceof StaggeredGridLayoutManager) {
-                                //因为StaggeredGridLayoutManager的特殊性可能导致最后显示的item存在多个，所以这里取到的是一个数组
-                                //得到这个数组后再取到数组中position值最大的那个就是最后显示的position值了
-                                int[] lastPositions = new int[((StaggeredGridLayoutManager) manager).getSpanCount()];
-                                ((StaggeredGridLayoutManager) manager).findLastVisibleItemPositions(lastPositions);
-                                lastItemPosition = findMaxByStaggeredGrid(lastPositions);
-                            }
 
                             if (visibleItemCount < manager.getItemCount()) {
                                 // 超出一屏幕
@@ -865,10 +848,9 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     @SuppressLint("NotifyDataSetChanged")
     public final void setLoadState(LoadState loadState) {
-        if (mEnableLoadMore) {
-            this.loadState = loadState;
-            notifyDataSetChanged();
-        }
+        this.loadState = loadState;
+        notifyDataSetChanged();
+
     }
 
     /**

@@ -21,8 +21,8 @@ public abstract class SimpleListAdapter<T> extends BaseListAdapter<T> {
     /**
      * 初始化无需数据源
      */
-    public SimpleListAdapter(Context context, int layoutResId, boolean supportFooter) {
-        super(context, supportFooter);
+    public SimpleListAdapter(Context context, int layoutResId, boolean enableLoadMore) {
+        super(context, enableLoadMore);
         mLayoutResId = layoutResId;
     }
 
@@ -37,8 +37,8 @@ public abstract class SimpleListAdapter<T> extends BaseListAdapter<T> {
     /**
      * 初始化需数据源
      */
-    public SimpleListAdapter(Context context, int layoutResId, boolean supportFooter, List<T> list) {
-        this(context, layoutResId, supportFooter);
+    public SimpleListAdapter(Context context, int layoutResId, boolean enableLoadMore, List<T> list) {
+        this(context, layoutResId, enableLoadMore);
         addData(list);
     }
 
