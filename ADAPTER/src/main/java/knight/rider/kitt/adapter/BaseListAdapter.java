@@ -105,7 +105,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     private boolean mIsShowComplete = false;
 
     /**
-     * 构造方法，默认支持加载状态的样式
+     * 构造方法，默认支持上拉加载
      *
      * @param context The context to use.  Usually your {@link android.app.Activity} object.
      */
@@ -114,7 +114,7 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
     /**
-     * 构造方法，默认支持加载状态的样式
+     * 构造方法
      *
      * @param context        The context to use.  Usually your {@link android.app.Activity} object.
      * @param enableLoadMore Is support load more ？
@@ -555,6 +555,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
                             if (manager == null)
                                 return;
+
+                            if (!mEnableLoadMore) {
+                                mIsShowComplete = false;
+                                return;
+                            }
 
                             // 当前屏幕所看到的子项个数
                             int visibleItemCount = manager.getChildCount();

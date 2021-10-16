@@ -27,7 +27,7 @@ public abstract class SimpleListAdapter<T> extends BaseListAdapter<T> {
     }
 
     /**
-     * 初始化无需数据源,默认支持脚布局
+     * 初始化无需数据源,默认支持上拉加载
      */
     public SimpleListAdapter(Context context, int layoutResId) {
         super(context, true);
@@ -43,7 +43,7 @@ public abstract class SimpleListAdapter<T> extends BaseListAdapter<T> {
     }
 
     /**
-     * 初始化需数据源，默认支持脚布局
+     * 初始化需数据源，默认支持上拉加载
      */
     public SimpleListAdapter(Context context, int layoutResId, List<T> list) {
         this(context, layoutResId, true);
