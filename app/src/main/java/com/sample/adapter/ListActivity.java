@@ -1,6 +1,7 @@
 package com.sample.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,9 +18,8 @@ import com.sample.adapter.adapters.MyAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import knight.rider.kitt.adapter.attr.DividerStyle;
 import knight.rider.kitt.adapter.attr.LoadState;
-import knight.rider.kitt.adapter.impl.ItemDecorationImpl;
+import knight.rider.kitt.adapter.impl.ItemVerticalDecorationImpl;
 import knight.rider.kitt.adapter.listener.OnFooterErrorListener;
 import knight.rider.kitt.adapter.listener.OnLoadMoreListener;
 
@@ -82,7 +82,7 @@ public class ListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rv.setLayoutManager(linearLayoutManager);
-        rv.addItemDecoration(new ItemDecorationImpl(DividerStyle.VERTICAL));
+        rv.addItemDecoration(new ItemVerticalDecorationImpl(Color.parseColor("#000000"), 2, 50, 20));
 
         adapter = new MyAdapter(this, RecyclerView.VERTICAL);
         adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
