@@ -775,8 +775,8 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     public final void remove(int position) {
         mData.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount() - position);
+        notifyItemRemoved(position + getHeaderLayoutCount());
+        notifyItemRangeChanged(position + getHeaderLayoutCount(), getItemCount() - position - getHeaderLayoutCount());
     }
 
 
