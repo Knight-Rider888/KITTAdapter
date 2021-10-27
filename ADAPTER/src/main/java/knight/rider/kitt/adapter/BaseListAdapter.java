@@ -751,11 +751,12 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     public final void addData(T data) {
 
-        int start = mData.size();
+        int start = mData.size() + getHeaderLayoutCount();
 
         mData.add(data);
         notifyItemInserted(start);
-        notifyItemRangeInserted(start, getItemCount() - start);
+        // 因为插入的最后一位，会自动bind，
+        // 且脚布局为内部控制，不对外提供position，所以不用调用刷新
     }
 
 
