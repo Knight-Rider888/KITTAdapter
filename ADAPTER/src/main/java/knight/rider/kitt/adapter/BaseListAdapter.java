@@ -738,9 +738,11 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         if (data == null)
             return;
 
-        int start = mData.size();
+        // 插入的真正position
+        int start = mData.size() + getHeaderLayoutCount();
 
         mData.addAll(data);
+        // 通知刷新，刷新位置为当前插入数据源的真正位置，个数为追加的数据源具体个数,脚布局，头布局不参与刷新，因为是动态添加
         notifyItemRangeInserted(start, data.size());
     }
 
