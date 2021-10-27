@@ -775,8 +775,10 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     public final void remove(int position) {
         mData.remove(position);
+        // 真正移除数据源的位置
         notifyItemRemoved(position + getHeaderLayoutCount());
-        notifyItemRangeChanged(position + getHeaderLayoutCount(), getItemCount() - position - getHeaderLayoutCount());
+        // 通知刷新，刷新位置为当前改动数据源的真正位置，个数为用户传递的数据源具体个数,脚布局，头布局不参与刷新，因为是动态添加
+        notifyItemRangeChanged(position + getHeaderLayoutCount(), mData.size() - position);
     }
 
 
