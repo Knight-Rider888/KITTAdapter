@@ -761,6 +761,31 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         // 且脚布局为内部控制，不对外提供position，所以不用调用刷新
     }
 
+    /**
+     * 添加数据
+     *
+     * @param position insert position
+     * @param data     object to be added to this list
+     */
+    public final void addData(int position, T data) {
+
+        if (position < 0)
+            position = 0;
+
+        if (position >= mData.size()) {
+            addData(data);
+            return;
+        }
+
+        int start = getHeaderLayoutCount() + position;
+
+        mData.add(position, data);
+        notifyItemInserted(start);
+        // 刷新的位置为数据源真正的位置，
+        // 刷新个数为总长度-插入的下标位置
+        notifyItemRangeChanged(start, mData.size() - position);
+    }
+
 
     /**
      * 清空数据源
