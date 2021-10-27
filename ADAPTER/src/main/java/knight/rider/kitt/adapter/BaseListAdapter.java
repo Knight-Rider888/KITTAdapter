@@ -744,6 +744,20 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         notifyItemRangeInserted(start, data.size());
     }
 
+    /**
+     * 添加数据
+     *
+     * @param data object to be added to this list
+     */
+    public final void addData(T data) {
+
+        int start = mData.size();
+
+        mData.add(data);
+        notifyItemInserted(start);
+        notifyItemRangeInserted(start, getItemCount() - start);
+    }
+
 
     /**
      * 清空数据源
