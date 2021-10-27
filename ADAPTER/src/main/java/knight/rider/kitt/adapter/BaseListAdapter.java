@@ -878,7 +878,6 @@ public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     public final void setLoadState(LoadState loadState) {
         this.loadState = loadState;
         notifyDataSetChanged();
-
     }
 
     /**
